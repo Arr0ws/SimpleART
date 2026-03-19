@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <link href="https://fonts.cdnfonts.com/css/vhs-gothic" rel="stylesheet">
+    <style>
+        body {
+            background-color: rgb(39, 39, 39);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        canvas {
+            margin: 32px;
+        }
+
+        button {
+            font-size: x-large;
+        }
+
+        #bigtext {
+            color: white;
+            font-family: 'VHS Gothic', sans-serif;
+        }
+
+        .canvas-wrapper {
+            display: flex;
+            height: 100vh;
+        }
+
+        #popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  
+            background: rgba(0,0,0,0.5);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popup-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #popup-color {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  
+            background: rgba(0,0,0,0.5);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popupbox-color {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #popup-save {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  
+            background: rgba(0,0,0,0.5);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popupbox-save {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        #popup-command {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  
+            background: rgba(0,0,0,0.5);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popupbox-command {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+
+        <h1 id="bigtext">SimpleART (Alpha 2.0)</h1>
+
+        <div style="background-color: rgb(26, 26, 26); gap: 20px; padding: 6px; border-radius: 8px; display: inline-flex;">
+            
+            <button id="Eraser">🧽</button>
+            <button id="Normal">🖌️</button>
+            <button id="pixel">👾</button>
+            <button id="Paint">🪣</button>
+            <button id="brushpickcolor">🎨</button>
+            <button id="shapes">SHAPES</button>
+
+        </div>
+
+        <h2 style="float: right; position: absolute; top: 10px; right: 10px; background-color: rgb(26, 26, 26); color: white;">
+            SIZE:
+
+            <span>
+                <p id="score">20</p>
+            </span>
+
+            <span style="float: right; margin-left: 10px;">
+                <button id="-">[ - ]</button>
+            </span>
+
+            <span style="float: right; margin-left: 10px;">
+                <button id="+">[ + ]</button>
+            </span>
+
+        </h2>
+    </div>
+
+    <div id="popup">
+        <div id="popup-box">
+            <p>
+                Pick a color!
+                <span style="float: right; margin-bottom: 20px;">
+                    <button id="closebtn" onclick="document.getElementById('popup').style.display='none'">
+                        X
+                    </button>
+                </span>
+            </p>
+            <button onclick="colorbg='red'; paintModeActive = true;">Red</button>
+            <button onclick="colorbg='blue'; paintModeActive = true">Blue</button>
+            <button onclick="colorbg='green'; paintModeActive = true">Green</button>
+            <button onclick="colorbg='white'; paintModeActive = true">White</button>
+        </div>
+    </div>
+
+    <div id="popup-color">
+        <div id="popupbox-color">
+            <p>
+                Pick a color!
+                <span style="float: right; margin-bottom: 20px;">
+                    <button id="closebtn" onclick="document.getElementById('popup-color').style.display='none'">
+                        X
+                    </button>
+                </span>
+            </p>
+            <button onclick="brushcolor = 'red'">Red</button>
+            <button onclick="brushcolor = 'blue'">Blue</button>
+            <button onclick="brushcolor = 'green'">Green</button>
+            <button onclick="brushcolor = 'white'">White</button>
+        </div>
+    </div>
+
+    <div id="popup-save">
+        <div id="popupbox-save">
+            <p>
+                Save your art
+                <span style="float: right; margin-bottom: 20px; margin-left: 30px;">
+                    <button id="closebtn" onclick="document.getElementById('popup-save').style.display='none'">
+                        X
+                    </button>
+                </span>
+                <br>
+                <br>
+                <input id="inputbox" placeholder="Type your file name"><span><button id="inputsave">save</button></span>
+            </p>
+        </div>
+    </div>
+
+    <div id="popup-command">
+        <div id="popupbox-commnd"">
+            <p>
+                List of command
+                <span style="float: right; margin-bottom: 20px; margin-left: 30px;">
+                    <button id="closebtn" onclick="document.getElementById('popup-save').style.display='none'">
+                        X
+                    </button>
+                </span>
+                <br>
+                <br>
+                <p>- Ctrl z (undo)</p>
+                <p>- Ctrl y (redo)</p>
+        </div>
+    </div>
+
+    <div class="canvas-wrapper" id="canvas-wrapper"></div>
+
+    <script src="index.js"></script>
+</body>
+</html>
