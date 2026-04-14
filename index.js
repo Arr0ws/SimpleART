@@ -1,5 +1,4 @@
-//TODO: Add a button so you can use the brush again after pressing the pixel button
-//Goodluck!
+
 let thicksize;
 let img;
 let paintModeActive = false;
