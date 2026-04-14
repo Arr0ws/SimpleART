@@ -1,6 +1,7 @@
 //TODO: Add a button so you can use the brush again after pressing the pixel button
 //Goodluck!
-
+let thicksize;
+let img;
 let paintModeActive = false;
 let popupsmode;
 let w = 50;
@@ -10,10 +11,18 @@ let redoStack = [];
 let colorbg = 255;
 let mode = "brush";
 let brushcolor = "black";
-let brushSize = 20;
+let brushSize;
 let canvasLayer;
 let prevX, prevY;
 let pX, pY;
+let hideornahscore = 0
+
+const arraymode = ["rect", "triangle", "circle"];
+const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
+
+function preload() {
+    img = loadImage("tumblr_a1036db59fe9a6705a2a95f9dc95eb92_80fbbcf5_640.webp");
+}
 
 function setup() {
     let canvas = createCanvas(900, 505);
@@ -22,14 +31,18 @@ function setup() {
     canvasLayer.background(colorbg);
     background(colorbg); // white background
     list1();
-    list2();
+    list2()
+    slider();
+    sliderclear();
+    canvasLayer.tint(255, 3);
+    canvasLayer.image(img, 0, 0, 900, 505);
+    canvasLayer.noTint();
     history.push(canvasLayer.get());
 }
 
 function draw() {
     background(colorbg);
     image(canvasLayer, 0, 0);
-
     if (mouseIsPressed) {
         if (mode === "brush") {
             //HOW DID I CODE THIS LAST NIGHT???
@@ -93,25 +106,33 @@ function draw() {
 
     if (mode === "rect") {
         noFill();
-        stroke(0);
-        rect(mouseX, mouseY, 80, 80);
+        stroke(thicksize)
+        rect(mouseX, mouseY, brushSize, brushSize);
     }
 
     if (mode === "circle") {
         noFill();
-        stroke(0);
-        circle(mouseX, mouseY, 80);
+        stroke(thicksize);
+        circle(mouseX, mouseY, brushSize);
     }
 
     if (mode === "triangle") {
         noFill();
-        stroke(0);
+        stroke(thicksize);
         triangle(mouseX, mouseY, mouseX + 50, mouseY, mouseX + 25, mouseY - 50);
+    }
+
+    if (mode === "text") {
+        textSize(brushSize);
+        text(userText, mouseX, mouseY, brushSize);
     }
 
     if (paintModeActive && mouseIsPressed) {
         canvasLayer.background(colorbg);
         paintModeActive = false;
+        canvasLayer.tint(255, 3);
+        canvasLayer.image(img, 0, 0, 900, 505);
+        canvasLayer.noTint();
     }
 }
 
@@ -119,22 +140,30 @@ function mousePressed() {
     if (mode === "rect") {
         canvasLayer.noFill();
         canvasLayer.stroke("black");
-        canvasLayer.strokeWeight(1);
-        canvasLayer.rect(mouseX, mouseY, 80, 80);
+        canvasLayer.strokeWeight(thicksize);
+        canvasLayer.rect(mouseX, mouseY, brushSize, brushSize);
     }
 
     if (mode === "circle") {
         canvasLayer.noFill();
         canvasLayer.stroke("black");
-        canvasLayer.strokeWeight(1);
-        canvasLayer.circle(mouseX, mouseY, 80);
+        canvasLayer.strokeWeight(thicksize);
+        canvasLayer.circle(mouseX, mouseY, brushSize);
     }
 
     if (mode === "triangle") {
         canvasLayer.noFill();
         canvasLayer.stroke("black");
-        canvasLayer.strokeWeight(1)
+        canvasLayer.strokeWeight(thicksize);
         canvasLayer.triangle(mouseX, mouseY, mouseX + 50, mouseY, mouseX + 25, mouseY - 50);
+    }
+
+    if (mode === "text") {
+        canvasLayer.noFill();
+        canvasLayer.stroke("black");
+        canvasLayer.strokeWeight(thicksize);
+        canvasLayer.textSize(brushSize)
+        canvasLayer.text(userText, mouseX, mouseY, 24)
     }
 }
 
@@ -147,22 +176,55 @@ function mouseReleased() {
 //keys! the only easy thing to code
 function keyPressed() {
     switch (key) {
+
+        case "Z":
         case "z":
             if (keyIsDown(CONTROL)) {
                 undo();
             }
             break;
 
+        case "Y":
         case "y":
             if (keyIsDown(CONTROL)) {
                 redo();
             }
             break;
         //saved the picture
+        case "X":
         case "x":
             if (keyIsDown(CONTROL)) {
                 popupsave();
             }
+            break;
+
+        case "A":
+        case "a":
+            shapes()
+            break;
+
+        case "1":
+            if (keyIsDown(CONTROL)) {
+                hideornah()
+            }
+            break;
+
+        case "m":
+            if (keyIsDown(CONTROL)) {
+                manualsalert()
+            }
+            break;
+
+        case "2":
+            if (keyIsDown(CONTROL)) {
+                showornah()
+            }
+            break;
+
+        case "9":
+            brushSize++
+            document.getElementById("score").textContent = brushSize
+            document.getElementById("volume").value = brushSize;
             break;
         //escaped the paint thingy
         case "Escape":
@@ -197,6 +259,14 @@ function redo() {
     }
 }
 
+function hideornah() {
+    document.getElementById("hideornah").style.display = "none";
+}
+
+function showornah() {
+    document.getElementById("hideornah").style.display = "block";
+}
+
 function popupsave() {
     document.getElementById("popup-save").style.display = "flex";
     mode = "none";
@@ -207,6 +277,10 @@ function list1() {
     document.getElementById("pixel").addEventListener("click", () => {
         mode = "pixel";
     });
+    /*
+    document.getElementById("favcolor").addEventListener("input", (e) => {
+        brushcolor = e.target.value;
+    });*/
 
     document.getElementById("inputsave").addEventListener("click", () => {
         let user = document.getElementById("inputbox").value;
@@ -222,6 +296,14 @@ function list1() {
         mode = "paint";
     });
 
+    document.getElementById("text").addEventListener("click", () => {
+        let user = prompt("Enter a text and place it randomly!")
+        if (user) {
+            mode = "text";
+            userText = user;
+        }
+    })
+
     document.getElementById("shapes").addEventListener("click", () => {
         let user = prompt("which shape?");
 
@@ -229,9 +311,13 @@ function list1() {
             mode = "rect";
         } else if (user === "triangle") {
             mode = "triangle";
-        } else if (user === "circle" || "3.14") {
+        } else if (user === "circle" || user === "3.14") {
             mode = "circle";
-        } 
+        } else if (user === "random") {
+            const arraymode = ["rect", "triangle", "circle"];
+            const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
+            mode = randomValue;
+        }
     });
 
     document.getElementById("brushpickcolor").addEventListener("click", () => {
@@ -239,7 +325,7 @@ function list1() {
     });
     //Eraser
     document.getElementById("Eraser").addEventListener("click", () => {
-        brushSize = 80;
+        brushSize = 20;
         brushcolor = "white";
         document.getElementById("score").textContent = brushSize;
     });
@@ -249,19 +335,65 @@ function list1() {
         mode = "brush";
         brushSize = 20;
         document.getElementById("score").textContent = brushSize;
+        document.getElementById("volume").value = brushSize;
     });
 }
 //List of stuff (part 2)
+
+
+function slider() {
+    let user = document.getElementById("volume").value
+    brushSize = Number(user)
+    document.getElementById("score").textContent = brushSize
+}
+
+function sliderclear() {
+    let user1 = document.getElementById("volume1").value
+    thicksize = Number(user1)
+    document.getElementById("scorethick").textContent = thicksize
+}
+
 function list2() {
-    //Making the brush more smaller
-    document.getElementById("-").addEventListener("click", () => {
-        brushSize--;
-        document.getElementById("score").textContent = brushSize;
-    });
-    //Making the brush more BIGGERRRR
-    document.getElementById("+").addEventListener("click", () => {
-        brushSize++;
-        document.getElementById("score").textContent = brushSize;
-    });
+    
+}
+
+function manualsalert() {
+    alert(`
+    - Ctrl z => undo
+    - Ctrl y => redo    
+    `)
+}
+
+function shapes() {
+    let user = prompt("which shape?");
+    if (user === "rectangle") {
+        mode = "rect";
+    } else if (user === "triangle") {
+        mode = "triangle";
+    } else if (user === "circle" || user === "3.14") {
+        mode = "circle";
+    } else if (user === "random") {
+        const arraymode = ["rect", "triangle", "circle"];
+        const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
+        mode = randomValue;
+    }    
+}
+
+function hide() {
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
