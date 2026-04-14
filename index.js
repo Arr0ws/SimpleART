@@ -29,7 +29,6 @@ function setup() {
     canvasLayer.background(colorbg);
     background(colorbg); // white background
     list1();
-    list2()
     slider();
     sliderclear();
     canvasLayer.tint(255, 3);
@@ -337,8 +336,6 @@ function list1() {
     });
 }
 //List of stuff (part 2)
-
-
 function slider() {
     let user = document.getElementById("volume").value
     brushSize = Number(user)
@@ -349,10 +346,6 @@ function sliderclear() {
     let user1 = document.getElementById("volume1").value
     thicksize = Number(user1)
     document.getElementById("scorethick").textContent = thicksize
-}
-
-function list2() {
-    
 }
 
 function manualsalert() {
@@ -375,8 +368,4 @@ function shapes() {
         const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
         mode = randomValue;
     }    
-}
-
-function hide() {
-
 }
