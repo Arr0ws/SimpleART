@@ -1,4 +1,7 @@
+//TODO: Add a button so you can use the brush again after pressing the pixel button
+//Goodluck!
 let thicksize;
+let img;
 let paintModeActive = false;
 let popupsmode;
 let w = 50;
@@ -17,6 +20,10 @@ let hideornahscore = 0
 const arraymode = ["rect", "triangle", "circle"];
 const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
 
+function preload() {
+    img = loadImage("tumblr_a1036db59fe9a6705a2a95f9dc95eb92_80fbbcf5_640.webp");
+}
+
 function setup() {
     let canvas = createCanvas(900, 505);
     canvas.parent("canvas-wrapper");
@@ -24,8 +31,12 @@ function setup() {
     canvasLayer.background(colorbg);
     background(colorbg); // white background
     list1();
+    list2()
     slider();
     sliderclear();
+    canvasLayer.tint(255, 3);
+    canvasLayer.image(img, 0, 0, 900, 505);
+    canvasLayer.noTint();
     history.push(canvasLayer.get());
 }
 
@@ -328,6 +339,8 @@ function list1() {
     });
 }
 //List of stuff (part 2)
+
+
 function slider() {
     let user = document.getElementById("volume").value
     brushSize = Number(user)
@@ -338,6 +351,10 @@ function sliderclear() {
     let user1 = document.getElementById("volume1").value
     thicksize = Number(user1)
     document.getElementById("scorethick").textContent = thicksize
+}
+
+function list2() {
+    
 }
 
 function manualsalert() {
@@ -361,3 +378,22 @@ function shapes() {
         mode = randomValue;
     }    
 }
+
+function hide() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
