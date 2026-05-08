@@ -23,13 +23,12 @@ To help artist finding
 
 I also made this software so that coders/developers can colaborate with artist!
 
-## LIST OF COMMANDS >_📝
-- Ctrl s (saving)
+## List of commands >_📝
 - Ctrl z and y (undo and redo)
 - Escape (closing pop up)
 - Ctrl x (save drawings)
 
-## LINK:
+## Link:
 
 https://arr0ws.github.io/SimpleART/
 
