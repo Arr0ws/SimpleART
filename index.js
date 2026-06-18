@@ -1,4 +1,4 @@
-
+let pressure = 0.5;
 let thicksize;
 let img;
 let paintModeActive = false;
@@ -25,6 +25,13 @@ function preload() {
 
 function setup() {
     let canvas = createCanvas(900, 505);
+    canvas.elt.addEventListener('pointermove', (event) => {
+        if (event.pointerType === 'pen' || event.pointerType === 'touch') {
+            currentPressure = event.pressure;
+        } else {
+            currentPressure = 0.5;
+        }
+    })
     canvas.parent("canvas-wrapper");
     canvasLayer = createGraphics(900, 505);
     canvasLayer.background(colorbg);
@@ -55,9 +62,9 @@ function draw() {
 
             prevX = mouseX
             prevY = mouseY*/
-
+            let dynamicSize = brushSize * currentPressure
             canvasLayer.stroke(brushcolor);
-            canvasLayer.strokeWeight(brushSize);
+            canvasLayer.strokeWeight(dynamicSize);
             canvasLayer.line(pmouseX, pmouseY, mouseX, mouseY);
         }
 
@@ -304,19 +311,8 @@ function list1() {
     })
 
     document.getElementById("shapes").addEventListener("click", () => {
-        let user = prompt("which shape?");
-
-        if (user === "rectangle") {
-            mode = "rect";
-        } else if (user === "triangle") {
-            mode = "triangle";
-        } else if (user === "circle" || user === "3.14") {
-            mode = "circle";
-        } else if (user === "random") {
-            const arraymode = ["rect", "triangle", "circle"];
-            const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
-            mode = randomValue;
-        }
+        document.getElementById("popup-shapes").style.display = "flex";
+        mode = "none";
     });
 
     document.getElementById("brushpickcolor").addEventListener("click", () => {
@@ -363,36 +359,7 @@ function manualsalert() {
     `)
 }
 
-function shapes() {
-    let user = prompt("which shape?");
-    if (user === "rectangle") {
-        mode = "rect";
-    } else if (user === "triangle") {
-        mode = "triangle";
-    } else if (user === "circle" || user === "3.14") {
-        mode = "circle";
-    } else if (user === "random") {
-        const arraymode = ["rect", "triangle", "circle"];
-        const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
-        mode = randomValue;
-    }    
-}
-
 function hide() {
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
