@@ -8,7 +8,7 @@
     <link href="https://fonts.cdnfonts.com/css/vhs-gothic" rel="stylesheet">
     <style>
         body {
-            background-color: rgb(44, 44, 44);
+            background-color: #242424;
             font-family: Arial, Helvetica, sans-serif;
         }
 
@@ -109,16 +109,36 @@
             border-radius: 10px;
         }
 
+        #popup-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;  
+            background: rgba(0,0,0,0.5);
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #popupbox-shapes {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
         button {
             border: 1px solid black;
         }
     </style>
 </head>
 <body>
-
+    <!--
     <h1 id="bigtext" style="background-color: rgb(255, 255, 255); border-radius: 8px; padding: 6px; display: inline-block;">
         SimpleART (Alpha 3.0)
     </h1>
+    -->
     <!--
     <input type="color" id="favcolor" name="favcolor" value="#ff0000">
     -->
@@ -128,18 +148,18 @@
         
 
         <div style="background-color: rgb(26, 26, 26); gap: 30px; padding: 7px; border-radius: 6px; display: inline-flex;">
-            
-            <button id="Eraser">🧽</button>
-            <button id="Normal">🖌️</button>
-            <button id="pixel">👾</button>
-            <button id="Paint">🪣</button>
-            <button id="brushpickcolor">🎨</button>
-            <button id="text">TEXT</button>
-            <button id="shapes">SHAPES</button>
-
+            <h1 id="bigtext" style="color: white;">SimpleART</h1>
+            <button id="Eraser" style="border: none; color: white; font-size: 20px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">🧽</button>
+            <button id="Normal" style="border: none; color: white; font-size: 20px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">🖌️</button>
+            <button id="pixel" style="border: none; color: white; font-size: 20px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">👾</button>
+            <button id="Paint" style="border: none; color: white; font-size: 20px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">🪣</button>
+            <button id="brushpickcolor" style="border: none; color: rgb(0, 0, 0); font-size: 20px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">🎨</button>
+            <button id="text" style="border: 1px solid #444; color: rgb(0, 0, 0); padding: 0 12px; height: 40px; border-radius: 4px; cursor: pointer; font-weight: bold;">TEXT</button>
+            <button id="shapes" style="border: 1px solid #444; color: rgb(0, 0, 0); padding: 0 12px; height: 40px; border-radius: 4px; cursor: pointer; font-weight: bold;">SHAPES</button>
+            <button style="border: 1px solid #444; color: rgb(0, 0, 0); padding: 0 12px; height: 40px; border-radius: 4px; cursor: pointer; font-weight: bold;">BRUSH TYPE</button>
         </div>
 
-        <div id="hideornah" style="float: right; position: absolute; top: 10px; right: 10px; background-color: rgb(26, 26, 26); color: white; font-size: x-large;">
+        <div id="hideornah" style="float: right; position: absolute; top: 10px; right: 10px; background-color: rgb(26, 26, 26); color: white; font-size: x-large; margin-top: 170px;">
             <h2 style="font-size: 40px;">( Size )</h2>
 
             <span>
@@ -148,18 +168,6 @@
 
             <span style="float: right; margin-left: 10px;">
                 <input type="range" id="volume" name="volume" min="0" max="100" value="50" oninput="slider()">
-            </span>
-
-            <span>
-                <h2 style="font-size: 40px;">( Clear )</h2>
-            </span>
-
-            <span>
-                <h2 id="scoreclear">20</h2>
-            </span>
-
-            <span style="float: right; margin-left: 10px;">
-                <input type="range" id="volume" name="volume" min="0" max="100" value="50" oninput="sliderclear()">
             </span>
 
             <span>
@@ -285,19 +293,21 @@
         </div>
     </div>
 
-    <div id="popup-command">
-        <div id="popupbox-commnd"">
+    <div id="popup-shapes">
+        <div id="popupbox-shapes">
             <p>
-                List of command
                 <span style="float: right; margin-bottom: 20px; margin-left: 30px;">
-                    <button id="closebtn" onclick="document.getElementById('popup-save').style.display='none'">
+                    <button id="closebtn" onclick="document.getElementById('popup-shapes').style.display='none'">
                         X
                     </button>
                 </span>
-                <br>
-                <br>
-                <p>- Ctrl z (undo)</p>
-                <p>- Ctrl y (redo)</p>
+                <span>
+                    <button onclick="mode = `circle`">Circle</button>
+                    <button onclick="mode = `rect`">Rectangle</button>
+                    <button onclick="mode = `triangle`">Triangle</button>
+                    <button onclick="const arraymode = ['rect', 'triangle', 'circle']; const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)]; mode = randomValue;">Random</button>
+                </span>
+            </p>
         </div>
     </div>
 
