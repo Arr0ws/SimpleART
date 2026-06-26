@@ -1,4 +1,4 @@
-# SimpleART 🎨🖌️✍🏻👩🏻‍🎨
+# SimpleART 🎨🖌️
 > ╰┈➤ Simplicity works 
 
 ## What is it? 🤔💭
