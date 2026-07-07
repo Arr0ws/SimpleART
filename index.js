@@ -1,9 +1,10 @@
-let pressure = 0.5;
+let currentPressure = 0.5;
 let thicksize;
 let img;
 let paintModeActive = false;
 let popupsmode;
 let w = 50;
+let stuff;
 let h = 50;
 let history = [];
 let redoStack = [];
@@ -13,8 +14,11 @@ let brushcolor = "black";
 let brushSize;
 let canvasLayer;
 let prevX, prevY;
+let resolutionW;
+let resolutionH;
 let pX, pY;
-let hideornahscore = 0
+let hideornahscore = 0;
+let userText = "";
 
 const arraymode = ["rect", "triangle", "circle"];
 const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)];
@@ -23,8 +27,20 @@ function preload() {
     img = loadImage("tumblr_a1036db59fe9a6705a2a95f9dc95eb92_80fbbcf5_640.webp");
 }
 
+function screen_size() {
+    let user = prompt("Choose your pixel dimensions(using numbers next to the shape)\n1. default")
+    if (user === "1") {
+        resolutionW = '900';
+        resolutionH = '505';
+    } else if (user === "secret") {
+        resolutionW = '100';
+        resolutionH = '100';
+    }
+}
+
 function setup() {
-    let canvas = createCanvas(900, 505);
+    screen_size();
+    let canvas = createCanvas(resolutionW, resolutionH);
     canvas.elt.addEventListener('pointermove', (event) => {
         if (event.pointerType === 'pen' || event.pointerType === 'touch') {
             currentPressure = event.pressure;
@@ -33,7 +49,7 @@ function setup() {
         }
     })
     canvas.parent("canvas-wrapper");
-    canvasLayer = createGraphics(900, 505);
+    canvasLayer = createGraphics(resolutionW, resolutionH);
     canvasLayer.background(colorbg);
     background(colorbg); // white background
     list1();
@@ -41,14 +57,14 @@ function setup() {
     slider();
     sliderclear();
     canvasLayer.tint(255, 3);
-    canvasLayer.image(img, 0, 0, 900, 505);
+    canvasLayer.image(img, 0, 0, resolutionW, resolutionH);
     canvasLayer.noTint();
     history.push(canvasLayer.get());
 }
-
 function draw() {
     background(colorbg);
     image(canvasLayer, 0, 0);
+    
     if (mouseIsPressed) {
         if (mode === "brush") {
             //HOW DID I CODE THIS LAST NIGHT???
@@ -65,6 +81,20 @@ function draw() {
             let dynamicSize = brushSize * currentPressure
             canvasLayer.stroke(brushcolor);
             canvasLayer.strokeWeight(dynamicSize);
+            canvasLayer.line(pmouseX, pmouseY, mouseX, mouseY);
+        }
+
+        if (mode === "normal_pen") {
+            canvasLayer.stroke(brushcolor);
+            canvasLayer.strokeWeight(brushSize);
+            canvasLayer.line(pmouseX, pmouseY, mouseX, mouseY);
+        }
+
+        if (mode === "airbrush") {
+            let airbrushColor = color(brushcolor);
+            airbrushColor.setAlpha(100);
+            canvasLayer.stroke(airbrushColor);
+            canvasLayer.strokeWeight(brushSize);
             canvasLayer.line(pmouseX, pmouseY, mouseX, mouseY);
         }
 
@@ -90,6 +120,13 @@ function draw() {
     }
     //Basically making a circle following the mouse cursor
     if (mode === "brush") {
+        noFill();
+        stroke(0);
+        circle(mouseX, mouseY, brushSize);
+    }
+
+
+    if (mode === "normal_pen") {
         noFill();
         stroke(0);
         circle(mouseX, mouseY, brushSize);
@@ -140,6 +177,8 @@ function draw() {
         canvasLayer.image(img, 0, 0, 900, 505);
         canvasLayer.noTint();
     }
+
+
 }
 
 function mousePressed() {
@@ -251,8 +290,10 @@ function undo() {
         let img = history[history.length - 1];
         canvasLayer.clear();
         canvasLayer.image(img, 0, 0);
+        redraw();
     }
 }
+
 //redo button!
 //if it's more than one then it will redo it
 //opposite of undo
@@ -262,6 +303,7 @@ function redo() {
         history.push(img);
         canvasLayer.clear();
         canvasLayer.image(img, 0, 0);
+        redraw();
     }
 }
 
@@ -277,6 +319,11 @@ function popupsave() {
     document.getElementById("popup-save").style.display = "flex";
     mode = "none";
 }
+
+function clear_screen() {
+    canvasLayer = createGraphics(resolutionW, resolutionH);
+}
+
 //List of stuff (part 1)
 function list1() {
     //Pixel art
@@ -296,6 +343,10 @@ function list1() {
         document.getElementById("popup-save").style.display = "none";
     });
 
+    document.getElementById("brushtype").addEventListener("click", () => {
+        document.getElementById("popup-brush").style.display = "flex";
+    })
+
     //Opening the paint pop up
     document.getElementById("Paint").addEventListener("click", () => {
         document.getElementById("popup").style.display = "flex";
@@ -307,12 +358,66 @@ function list1() {
         if (user) {
             mode = "text";
             userText = user;
+            thicksize = 1;
+            document.getElementById("scorethick").textContent = thicksize
         }
     })
 
     document.getElementById("shapes").addEventListener("click", () => {
-        document.getElementById("popup-shapes").style.display = "flex";
         mode = "none";
+        let user = prompt("Choose your shape (using numbers next to the shape)\n1. circle | 2. rectangle | 3. triangle | 4. random");
+        switch (user) {
+
+            case "1":
+            case "3.14": //easter egg???
+                mode = "circle"
+                break;
+
+            case "2":
+                mode = "rect"
+                break;
+
+            case "3":
+                mode = "triangle"
+                break;
+
+            case "4":
+                const arraymode = ['rect', 'triangle', 'circle']; 
+                const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)]; 
+                mode = randomValue;
+                break;
+
+            default:
+                break;
+        }
+    });
+
+    document.getElementById("brushtype").addEventListener("click", () => {
+        mode = "none";
+        let user = prompt("Choose your type of brush (using numbers next to the shape)\n1. pen | 2. normal | 3. airbrush | 4. pencil");
+        switch (user) {
+
+            case "1":
+                mode = "normal_pen"
+                break;
+
+            case "2":
+                mode = "brush"
+                break;
+
+            case "3":
+                mode = "airbrush"
+                break;
+
+            case "4":
+                const arraymode = ['rect', 'triangle', 'circle']; 
+                const randomValue = arraymode[Math.floor(Math.random() * arraymode.length)]; 
+                mode = randomValue;
+                break;
+
+            default:
+                break;
+        }
     });
 
     document.getElementById("brushpickcolor").addEventListener("click", () => {
@@ -353,10 +458,7 @@ function list2() {
 }
 
 function manualsalert() {
-    alert(`
-    - Ctrl z => undo
-    - Ctrl y => redo    
-    `)
+    document.getElementById("popup-manual").style.display = "flex";
 }
 
 function hide() {
